@@ -6,7 +6,7 @@
             <p class="text-gray-600 dark:text-gray-400">Escolha as questões para adicionar ao seu simulado</p>
         </div>
 
-        <div x-data="questoesSelector()" class="flex flex-col lg:flex-row gap-8">
+        <div x-data="questoesSelector({{ $record }})" class="flex flex-col lg:flex-row gap-8">
             <!-- Coluna Esquerda: Pesquisa e Lista -->
             <div class="flex-1 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                 <form method="GET" class="flex gap-2 items-center mb-4">
@@ -103,16 +103,28 @@
     </div>
 
     <script>
-        function questoesSelector() {
+        function questoesSelector(simuladoId) {
+            const storageKey = `simulado_${simuladoId}_questoesSelecionadas`;
             return {
                 selectedQuestoes: [],
+                init() {
+                    const saved = localStorage.getItem(storageKey);
+                    if (saved) {
+                        this.selectedQuestoes = JSON.parse(saved);
+                    }
+                },
                 addQuestao(questao) {
                     if (!this.selectedQuestoes.some(q => q.id === questao.id)) {
                         this.selectedQuestoes.push(questao);
+                        this.save();
                     }
                 },
                 removeQuestao(id) {
                     this.selectedQuestoes = this.selectedQuestoes.filter(q => q.id !== id);
+                    this.save();
+                },
+                save() {
+                    localStorage.setItem(storageKey, JSON.stringify(this.selectedQuestoes));
                 }
             }
         }
