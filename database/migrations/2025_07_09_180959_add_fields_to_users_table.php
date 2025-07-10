@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->enum('tipo', ['aluno', 'admin'])->default('aluno');
             $table->string('cpf', 14)->unique()->nullable();
-            $table->string('telefone', 15)->nullable();
+            $table->string('telefone', 30)->nullable();
             $table->string('auto_escola')->nullable();
         });
     }

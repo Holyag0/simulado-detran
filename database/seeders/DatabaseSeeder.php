@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Simulado;
+use App\Models\Questao;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +14,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Cria 2 admins fixos
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
+            'tipo' => 'admin',
         ]);
+        User::factory()->create([
+            'name' => 'Admin 2',
+            'email' => 'admin2@admin.com',
+            'tipo' => 'admin',
+        ]);
+
+        // Cria 10 alunos
+        User::factory(10)->create(['tipo' => 'aluno']);
+
+        // Cria 5 simulados, cada um com 15 questões
+        Simulado::factory(5)->create()->each(function ($simulado) {
+            Questao::factory(15)->create([
+                'simulado_id' => $simulado->id,
+            ]);
+        });
     }
 }

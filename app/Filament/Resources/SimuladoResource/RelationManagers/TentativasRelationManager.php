@@ -12,39 +12,52 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TentativasRelationManager extends RelationManager
 {
-    protected static string $relationship = 'Tentativas';
+    protected static string $relationship = 'tentativas';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('TentativasRelationManager')
-                    ->required()
-                    ->maxLength(255),
+                // Não permitir criar/editar tentativas manualmente por padrão
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('TentativasRelationManager')
             ->columns([
-                Tables\Columns\TextColumn::make('TentativasRelationManager'),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Aluno')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('pontuacao')
+                    ->label('Pontuação (%)')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('acertos')
+                    ->label('Acertos'),
+                Tables\Columns\TextColumn::make('erros')
+                    ->label('Erros'),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn($state) => $state === 'finalizada' ? 'success' : 'warning'),
+                Tables\Columns\TextColumn::make('iniciado_em')
+                    ->label('Início')
+                    ->dateTime('d/m/Y H:i'),
+                Tables\Columns\TextColumn::make('finalizado_em')
+                    ->label('Fim')
+                    ->dateTime('d/m/Y H:i'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                // Não permitir criar tentativas manualmente
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Não permitir editar/deletar tentativas manualmente
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //
             ]);
     }
 }
