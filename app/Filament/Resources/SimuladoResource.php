@@ -111,7 +111,7 @@ class SimuladoResource extends Resource
                 Tables\Actions\Action::make('adicionarQuestoesExistentes')
                     ->label('Adicionar Questões')
                     ->icon('heroicon-o-plus')
-                    ->url(fn($record) => static::getUrl('adicionar-questoes-existentes', ['record' => $record]))
+                    ->url(fn($record) => route('filament.admin.resources.simulados.adicionar-questoes-existentes', ['simulado' => $record->id]))
                     ->color('primary'),
             ])
             ->bulkActions([

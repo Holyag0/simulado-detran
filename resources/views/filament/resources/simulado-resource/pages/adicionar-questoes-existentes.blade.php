@@ -91,7 +91,7 @@
                         </li>
                     </template>
                 </ul>
-                <form method="POST" x-show="selectedQuestoes.length > 0">
+                <form method="POST" :action="'{{ route('filament.admin.resources.simulados.adicionar-questoes-existentes', $record) }}'" x-show="selectedQuestoes.length > 0">
                     @csrf
                     <template x-for="questao in selectedQuestoes" :key="questao.id">
                         <input type="hidden" name="questoes[]" :value="questao.id">

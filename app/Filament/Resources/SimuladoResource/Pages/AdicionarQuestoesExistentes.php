@@ -44,12 +44,12 @@ class AdicionarQuestoesExistentes extends Page
         ];
     }
 
-    public function associateQuestoes(Request $request)
+    public function associateQuestoes(Request $request, $simulado)
     {
-        $simuladoId = $this->record;
+        $simuladoId = $simulado;
         $questoesSelecionadas = $request->input('questoes', []);
         if (!empty($questoesSelecionadas)) {
-            Questao::whereIn('id', $questoesSelecionadas)->update(['simulado_id' => $simuladoId]);
+            \App\Models\Questao::whereIn('id', $questoesSelecionadas)->update(['simulado_id' => $simuladoId]);
         }
         return redirect()->route('filament.admin.resources.simulados.edit', ['record' => $simuladoId])
             ->with('success', 'Questões adicionadas com sucesso!');
