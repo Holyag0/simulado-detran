@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -21,6 +22,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'tipo',
+        'cpf',
+        'telefone',
+        'auto_escola',
     ];
 
     /**
@@ -44,5 +49,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function tentativas(): HasMany
+    {
+        return $this->hasMany(Tentativa::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->tipo === 'admin';
+    }
+
+    public function isAluno(): bool
+    {
+        return $this->tipo === 'aluno';
     }
 }
