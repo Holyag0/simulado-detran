@@ -108,6 +108,11 @@ class SimuladoResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('adicionarQuestoesExistentes')
+                    ->label('Adicionar Questões')
+                    ->icon('heroicon-o-plus')
+                    ->url(fn($record) => route('filament.admin.resources.simulados.adicionar-questoes-existentes', ['simulado' => $record->id]))
+                    ->color('primary'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -130,6 +135,7 @@ class SimuladoResource extends Resource
             'index' => Pages\ListSimulados::route('/'),
             'create' => Pages\CreateSimulado::route('/create'),
             'edit' => Pages\EditSimulado::route('/{record}/edit'),
+            'adicionar-questoes-existentes' => Pages\AdicionarQuestoesExistentes::route('/{record}/adicionar-questoes-existentes'),
         ];
     }
 }
