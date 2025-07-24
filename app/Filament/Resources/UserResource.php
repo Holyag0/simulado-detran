@@ -40,7 +40,7 @@ class UserResource extends Resource
                     ->maxLength(14),
                 Forms\Components\TextInput::make('telefone')
                     ->label('Telefone')
-                    ->maxLength(15),
+                    ->maxLength(30),
                 Forms\Components\TextInput::make('auto_escola')
                     ->label('Auto Escola')
                     ->maxLength(255),
