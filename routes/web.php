@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Filament\Resources\SimuladoResource\Pages\AdicionarQuestoesExistentes;
-use App\Livewire\Aluno\QuizSimulado;
 use App\Livewire\Aluno\SimuladosDisponiveis;
+use App\Livewire\Aluno\QuizSimulado;
 use App\Livewire\Aluno\MeusResultados;
 use App\Livewire\Aluno\MinhaConta;
+use App\Livewire\Aluno\VerResultadoSimulado;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -43,12 +44,9 @@ Route::post('/admin/simulados/{simulado}/adicionar-questoes-existentes', [Adicio
     ->name('filament.admin.resources.simulados.adicionar-questoes-existentes');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/aluno/simulados', SimuladosDisponiveis::class)
-        ->name('aluno.simulados');
-    Route::get('/aluno/simulado/{simuladoId}/quiz', QuizSimulado::class)
-        ->name('aluno.simulado.quiz');
-    Route::get('/aluno/resultados', MeusResultados::class)
-        ->name('aluno.resultados');
-    Route::get('/aluno/conta', MinhaConta::class)
-        ->name('aluno.conta');
+    Route::get('/aluno/simulados', SimuladosDisponiveis::class)->name('aluno.simulados');
+    Route::get('/aluno/simulado/{simuladoId}/quiz', QuizSimulado::class)->name('aluno.simulado.quiz');
+    Route::get('/aluno/simulado/{simuladoId}/resultado', VerResultadoSimulado::class)->name('aluno.simulado.resultado');
+    Route::get('/aluno/resultados', MeusResultados::class)->name('aluno.resultados');
+    Route::get('/aluno/conta', MinhaConta::class)->name('aluno.conta');
 });
