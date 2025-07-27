@@ -17,7 +17,7 @@
                             <a href="{{ route('aluno.simulado.quiz', $simulado->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-medium text-center">Continuar</a>
                         @else
                             <span class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-lg font-medium text-center">Finalizado</span>
-                            <a href="{{ route('aluno.simulado.quiz', $simulado->id) }}" class="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg font-medium text-center mt-1">Ver Respostas</a>
+                            <a href="{{ route('aluno.simulado.resultado', $simulado->id) }}" class="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg font-medium text-center mt-1">Ver Respostas</a>
                         @endif
                     </div>
                 </div>

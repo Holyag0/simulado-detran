@@ -34,27 +34,91 @@ class QuestaoResource extends Resource
                     ->label('Pergunta')
                     ->required()
                     ->rows(3),
-                Forms\Components\TextInput::make('alternativa_a')
-                    ->label('Alternativa A')
-                    ->required(),
-                Forms\Components\TextInput::make('alternativa_b')
-                    ->label('Alternativa B')
-                    ->required(),
-                Forms\Components\TextInput::make('alternativa_c')
-                    ->label('Alternativa C')
-                    ->required(),
-                Forms\Components\TextInput::make('alternativa_d')
-                    ->label('Alternativa D')
-                    ->required(),
-                Forms\Components\Select::make('resposta_correta')
-                    ->label('Resposta Correta')
-                    ->options([
-                        'a' => 'A',
-                        'b' => 'B',
-                        'c' => 'C',
-                        'd' => 'D',
-                    ])
-                    ->required(),
+                Forms\Components\Section::make('Alternativas')
+                    ->description('Clique no ícone ✓ ao lado da alternativa para marcá-la como correta')
+                    ->schema([
+                        Forms\Components\Grid::make(1)
+                            ->schema([
+                                Forms\Components\TextInput::make('alternativa_a')
+                                    ->label('Alternativa A')
+                                    ->required()
+                                    ->prefix(fn($get) => $get('resposta_correta') === 'a' ? '✓' : 'A')
+                                    ->prefixIcon(fn($get) => $get('resposta_correta') === 'a' ? 'heroicon-o-check-circle' : null)
+                                    ->prefixIconColor('success')
+                                    ->suffixAction(
+                                        Forms\Components\Actions\Action::make('marcar_a')
+                                            ->icon('heroicon-o-check-circle')
+                                            ->color('success')
+                                            ->label('Marcar como correta')
+                                            ->action(function ($livewire, $get, $set) {
+                                                $set('resposta_correta', 'a');
+                                            })
+                                            ->visible(fn($get) => $get('resposta_correta') !== 'a')
+                                    )
+                                    ->extraAttributes(fn($get) => [
+                                        'class' => $get('resposta_correta') === 'a' ? 'ring-2 ring-green-500' : ''
+                                    ]),
+                                Forms\Components\TextInput::make('alternativa_b')
+                                    ->label('Alternativa B')
+                                    ->required()
+                                    ->prefix(fn($get) => $get('resposta_correta') === 'b' ? '✓' : 'B')
+                                    ->prefixIcon(fn($get) => $get('resposta_correta') === 'b' ? 'heroicon-o-check-circle' : null)
+                                    ->prefixIconColor('success')
+                                    ->suffixAction(
+                                        Forms\Components\Actions\Action::make('marcar_b')
+                                            ->icon('heroicon-o-check-circle')
+                                            ->color('success')
+                                            ->label('Marcar como correta')
+                                            ->action(function ($livewire, $get, $set) {
+                                                $set('resposta_correta', 'b');
+                                            })
+                                            ->visible(fn($get) => $get('resposta_correta') !== 'b')
+                                    )
+                                    ->extraAttributes(fn($get) => [
+                                        'class' => $get('resposta_correta') === 'b' ? 'ring-2 ring-green-500' : ''
+                                    ]),
+                                Forms\Components\TextInput::make('alternativa_c')
+                                    ->label('Alternativa C')
+                                    ->required()
+                                    ->prefix(fn($get) => $get('resposta_correta') === 'c' ? '✓' : 'C')
+                                    ->prefixIcon(fn($get) => $get('resposta_correta') === 'c' ? 'heroicon-o-check-circle' : null)
+                                    ->prefixIconColor('success')
+                                    ->suffixAction(
+                                        Forms\Components\Actions\Action::make('marcar_c')
+                                            ->icon('heroicon-o-check-circle')
+                                            ->color('success')
+                                            ->label('Marcar como correta')
+                                            ->action(function ($livewire, $get, $set) {
+                                                $set('resposta_correta', 'c');
+                                            })
+                                            ->visible(fn($get) => $get('resposta_correta') !== 'c')
+                                    )
+                                    ->extraAttributes(fn($get) => [
+                                        'class' => $get('resposta_correta') === 'c' ? 'ring-2 ring-green-500' : ''
+                                    ]),
+                                Forms\Components\TextInput::make('alternativa_d')
+                                    ->label('Alternativa D')
+                                    ->required()
+                                    ->prefix(fn($get) => $get('resposta_correta') === 'd' ? '✓' : 'D')
+                                    ->prefixIcon(fn($get) => $get('resposta_correta') === 'd' ? 'heroicon-o-check-circle' : null)
+                                    ->prefixIconColor('success')
+                                    ->suffixAction(
+                                        Forms\Components\Actions\Action::make('marcar_d')
+                                            ->icon('heroicon-o-check-circle')
+                                            ->color('success')
+                                            ->label('Marcar como correta')
+                                            ->action(function ($livewire, $get, $set) {
+                                                $set('resposta_correta', 'd');
+                                            })
+                                            ->visible(fn($get) => $get('resposta_correta') !== 'd')
+                                    )
+                                    ->extraAttributes(fn($get) => [
+                                        'class' => $get('resposta_correta') === 'd' ? 'ring-2 ring-green-500' : ''
+                                    ]),
+                            ])
+                    ]),
+                Forms\Components\Hidden::make('resposta_correta')
+                    ->default('a'),
                 Forms\Components\Textarea::make('explicacao')
                     ->label('Explicação (opcional)')
                     ->rows(2),
@@ -103,12 +167,15 @@ class QuestaoResource extends Resource
                     ->falseLabel('Inativas'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Editar'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Excluir'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Excluir selecionados'),
                 ]),
             ]);
     }
