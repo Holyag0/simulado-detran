@@ -8,13 +8,51 @@
                 <p class="text-gray-600 dark:text-gray-400">Histórico de simulados realizados</p>
             </div>
 
+            {{-- Filtro Ativo --}}
+            @if($simuladoSelecionado)
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Filtro Ativo</h3>
+                                <p class="text-gray-600 dark:text-gray-400">Mostrando resultados apenas para: <strong>{{ $simuladoSelecionado->titulo }}</strong></p>
+                            </div>
+                        </div>
+                        <button wire:click="limparFiltro" 
+                                class="inline-flex items-center gap-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg font-medium transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            Limpar Filtro
+                        </button>
+                    </div>
+                </div>
+            @endif
+
             {{-- Estatísticas Gerais --}}
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-100 dark:border-gray-700">
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Estatísticas Gerais</h2>
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+                    @if($simuladoSelecionado)
+                        Estatísticas do Simulado
+                    @else
+                        Estatísticas Gerais
+                    @endif
+                </h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="text-center">
                         <div class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">{{ $estatisticasGerais['total_simulados'] }}</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400">Simulados Realizados</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            @if($simuladoSelecionado)
+                                Tentativas Realizadas
+                            @else
+                                Simulados Realizados
+                            @endif
+                        </div>
                     </div>
                     <div class="text-center">
                         <div class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-2">{{ $estatisticasGerais['aprovacoes'] }}</div>
@@ -47,8 +85,9 @@
                                     </div>
                                     <div class="flex items-center gap-4">
                                         <div class="text-center">
-                                            <div class="text-2xl font-bold text-{{ $statusColor }}-600 dark:text-{{ $statusColor }}-400">{{ $tentativa->pontuacao }}%</div>
+                                            <div class="text-2xl font-bold text-{{ $statusColor }}-600 dark:text-{{ $statusColor }}-400">{{ $tentativa->getAproveitamentoFormatado() }}</div>
                                             <div class="text-sm text-gray-600 dark:text-gray-400">Aproveitamento</div>
+                                            <div class="text-xs text-{{ $statusColor }}-600 dark:text-{{ $statusColor }}-400">Nota: {{ $tentativa->getNotaFormatada() }}</div>
                                         </div>
                                         <div class="px-4 py-2 rounded-full text-sm font-medium bg-{{ $statusColor }}-100 dark:bg-{{ $statusColor }}-900/30 text-{{ $statusColor }}-700 dark:text-{{ $statusColor }}-300">
                                             {{ $status }}

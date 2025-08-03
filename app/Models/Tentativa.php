@@ -53,6 +53,27 @@ class Tentativa extends Model
         ]);
     }
 
+    public function getAproveitamento(): float
+    {
+        return $this->pontuacao;
+    }
+
+    public function getNota(): float
+    {
+        // Converte o percentual para nota de 0-10
+        return round($this->pontuacao / 10, 1);
+    }
+
+    public function getNotaFormatada(): string
+    {
+        return number_format($this->getNota(), 1, ',', '.');
+    }
+
+    public function getAproveitamentoFormatado(): string
+    {
+        return number_format($this->getAproveitamento(), 1, ',', '.') . '%';
+    }
+
     public function finalizar(): void
     {
         $this->update([

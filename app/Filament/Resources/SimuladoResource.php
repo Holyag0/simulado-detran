@@ -127,12 +127,12 @@ class SimuladoResource extends Resource
                     ->modalDescription('Isso irá substituir todas as questões atuais do simulado por questões aleatórias baseadas na configuração de categorias.')
                     ->modalSubmitActionLabel('Gerar Questões')
                     ->visible(fn($record) => $record->categorias()->count() > 0),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->label('Editar'),
+                Tables\Actions\DeleteAction::make()->label('Excluir'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Excluir selecionados'),
                 ]),
             ]);
     }
