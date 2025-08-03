@@ -28,6 +28,7 @@ class CategoriasRelationManager extends RelationManager
                     ->preload(),
                 Forms\Components\TextInput::make('quantidade_questoes')
                     ->label('Quantidade de Questões')
+                    ->placeholder('5')
                     ->numeric()
                     ->required()
                     ->minValue(1)

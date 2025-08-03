@@ -51,7 +51,6 @@ class QuestaoSeeder extends Seeder
             foreach ($questoesMecanica as $questao) {
                 Questao::create(array_merge($questao, [
                     'categoria_id' => $mecanica->id,
-                    'simulado_id' => null, // Questões base sem simulado
                 ]));
             }
         }
@@ -92,7 +91,6 @@ class QuestaoSeeder extends Seeder
             foreach ($questoesLegislacao as $questao) {
                 Questao::create(array_merge($questao, [
                     'categoria_id' => $legislacao->id,
-                    'simulado_id' => null,
                 ]));
             }
         }
@@ -124,7 +122,6 @@ class QuestaoSeeder extends Seeder
             foreach ($questoesMeioAmbiente as $questao) {
                 Questao::create(array_merge($questao, [
                     'categoria_id' => $meioAmbiente->id,
-                    'simulado_id' => null,
                 ]));
             }
         }
@@ -156,7 +153,6 @@ class QuestaoSeeder extends Seeder
             foreach ($questoesDirecaoDefensiva as $questao) {
                 Questao::create(array_merge($questao, [
                     'categoria_id' => $direcaoDefensiva->id,
-                    'simulado_id' => null,
                 ]));
             }
         }
@@ -188,7 +184,6 @@ class QuestaoSeeder extends Seeder
             foreach ($questoesSinalizacao as $questao) {
                 Questao::create(array_merge($questao, [
                     'categoria_id' => $sinalizacao->id,
-                    'simulado_id' => null,
                 ]));
             }
         }
@@ -220,7 +215,6 @@ class QuestaoSeeder extends Seeder
             foreach ($questoesPrimeirosSocorros as $questao) {
                 Questao::create(array_merge($questao, [
                     'categoria_id' => $primeirosSocorros->id,
-                    'simulado_id' => null,
                 ]));
             }
         }

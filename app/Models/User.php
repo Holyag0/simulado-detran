@@ -53,6 +53,7 @@ class User extends Authenticatable
 
     public function tentativas(): HasMany
     {
+        // Relacionamento com os resultados dos simulados do aluno
         return $this->hasMany(Tentativa::class);
     }
 

@@ -18,7 +18,7 @@ class TentativasRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                // Não permitir criar/editar tentativas manualmente por padrão
+                // Não permitir criar/editar resultados manualmente por padrão
             ]);
     }
 
@@ -51,10 +51,10 @@ class TentativasRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                // Não permitir criar tentativas manualmente
+                // Não permitir criar resultados manualmente
             ])
             ->actions([
-                // Não permitir editar/deletar tentativas manualmente
+                // Não permitir editar/deletar resultados manualmente
             ])
             ->bulkActions([
                 //

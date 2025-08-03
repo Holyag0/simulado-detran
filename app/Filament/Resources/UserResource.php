@@ -28,21 +28,26 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Nome')
+                    ->placeholder('Digite o nome completo')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->label('E-mail')
+                    ->placeholder('exemplo@email.com')
                     ->email()
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('cpf')
                     ->label('CPF')
+                    ->placeholder('000.000.000-00')
                     ->maxLength(14),
                 Forms\Components\TextInput::make('telefone')
                     ->label('Telefone')
+                    ->placeholder('(11) 99999-9999')
                     ->maxLength(30),
                 Forms\Components\TextInput::make('auto_escola')
                     ->label('Auto Escola')
+                    ->placeholder('Nome da auto escola')
                     ->maxLength(255),
                 Forms\Components\Select::make('tipo')
                     ->label('Tipo')
@@ -54,6 +59,7 @@ class UserResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('password')
                     ->label('Senha')
+                    ->placeholder('Digite a senha')
                     ->password()
                     ->maxLength(255)
                     ->dehydrateStateUsing(fn($state) => !empty($state) ? bcrypt($state) : null)
@@ -77,12 +83,14 @@ class UserResource extends Resource
                     ->label('Telefone'),
                 Tables\Columns\TextColumn::make('auto_escola')
                     ->label('Auto Escola'),
-                Tables\Columns\BadgeColumn::make('tipo')
+                Tables\Columns\TextColumn::make('tipo')
                     ->label('Tipo')
-                    ->colors([
-                        'success' => 'aluno',
-                        'primary' => 'admin',
-                    ])
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'aluno' => 'success',
+                        'admin' => 'primary',
+                        default => 'gray',
+                    })
                     ->formatStateUsing(fn($state) => ucfirst($state)),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado em')

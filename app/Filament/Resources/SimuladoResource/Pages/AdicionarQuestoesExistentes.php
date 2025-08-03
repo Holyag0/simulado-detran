@@ -4,6 +4,7 @@ namespace App\Filament\Resources\SimuladoResource\Pages;
 
 use App\Filament\Resources\SimuladoResource;
 use App\Models\Questao;
+use App\Models\Simulado;
 use Filament\Resources\Pages\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -13,45 +14,70 @@ class AdicionarQuestoesExistentes extends Page
     protected static string $resource = SimuladoResource::class;
     protected static string $view = 'filament.resources.simulado-resource.pages.adicionar-questoes-existentes';
 
-    public $record;
-
-    public function mount($record): void
-    {
-        $this->record = $record;
-    }
-
     public function getViewData(): array
     {
-        $simuladoId = $this->record;
+        // Obter o simulado da rota
+        $simuladoId = request()->route('simulado');
+        $simulado = Simulado::findOrFail($simuladoId);
         $search = request('search');
 
-        $questoesQuery = Questao::where(function ($query) use ($simuladoId) {
-            $query->whereNull('simulado_id')
-                  ->orWhere('simulado_id', '!=', $simuladoId);
-        });
+        // Buscar questões que não estão neste simulado
+        $questoesExistentes = $simulado->questoes()->pluck('questaos.id')->toArray();
+        
+        $questoesQuery = Questao::whereNotIn('id', $questoesExistentes)
+            ->where('ativo', true)
+            ->with('categoria');
 
         if ($search) {
             $questoesQuery->where(function ($query) use ($search) {
                 $query->where('id', $search)
-                      ->orWhere('pergunta', 'like', "%$search%") ;
+                      ->orWhere('pergunta', 'like', "%$search%")
+                      ->orWhereHas('categoria', function ($q) use ($search) {
+                          $q->where('nome', 'like', "%$search%");
+                      });
             });
         }
 
-        $questoes = $questoesQuery->orderBy('id', 'desc')->paginate(10);
+        $questoes = $questoesQuery->orderBy('id', 'desc')->paginate(15);
 
         return [
             'questoes' => $questoes,
+            'simulado' => $simulado,
         ];
     }
 
     public function associateQuestoes(Request $request, $simulado)
     {
-        $simuladoId = $simulado;
+        // Garantir que temos um objeto Simulado
+        $simulado = is_numeric($simulado) ? Simulado::findOrFail($simulado) : $simulado;
         $questoesSelecionadas = $request->input('questoes', []);
+        
         if (!empty($questoesSelecionadas)) {
-            \App\Models\Questao::whereIn('id', $questoesSelecionadas)->update(['simulado_id' => $simuladoId]);
+            // Filtrar questões que já existem no simulado para evitar duplicatas
+            $questoesExistentes = $simulado->questoes()->pluck('questaos.id')->toArray();
+            $questoesNovas = array_diff($questoesSelecionadas, $questoesExistentes);
+            
+            if (!empty($questoesNovas)) {
+                // Usar o relacionamento many-to-many apenas com questões novas
+                $simulado->questoes()->attach($questoesNovas);
+                
+                $totalAdicionadas = count($questoesNovas);
+                $totalIgnoradas = count($questoesSelecionadas) - count($questoesNovas);
+                
+                $mensagem = "{$totalAdicionadas} questão(ões) adicionada(s) com sucesso!";
+                if ($totalIgnoradas > 0) {
+                    $mensagem .= " {$totalIgnoradas} questão(ões) já existia(m) no simulado e foi(ram) ignorada(s).";
+                }
+                
+                return redirect()->route('filament.admin.resources.simulados.edit', ['record' => $simulado->id])
+                    ->with('success', $mensagem);
+            } else {
+                return redirect()->route('filament.admin.resources.simulados.edit', ['record' => $simulado->id])
+                    ->with('warning', 'Todas as questões selecionadas já existem no simulado.');
+            }
         }
-        return redirect()->route('filament.admin.resources.simulados.edit', ['record' => $simuladoId])
-            ->with('success', 'Questões adicionadas com sucesso!');
+        
+        return redirect()->route('filament.admin.resources.simulados.edit', ['record' => $simulado->id])
+            ->with('info', 'Nenhuma questão foi selecionada.');
     }
 }

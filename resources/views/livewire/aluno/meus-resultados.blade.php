@@ -36,13 +36,7 @@
 
             {{-- Estatísticas Gerais --}}
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-100 dark:border-gray-700">
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
-                    @if($simuladoSelecionado)
-                        Estatísticas do Simulado
-                    @else
-                        Estatísticas Gerais
-                    @endif
-                </h2>
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Resultados Realizados</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="text-center">
                         <div class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">{{ $estatisticasGerais['total_simulados'] }}</div>

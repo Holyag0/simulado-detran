@@ -35,11 +35,13 @@ class SimuladoResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('titulo')
                             ->label('Título')
+                            ->placeholder('Ex: Simulado Completo DETRAN')
                             ->required()
                             ->maxLength(255),
                         
                         Forms\Components\Textarea::make('descricao')
                             ->label('Descrição')
+                            ->placeholder('Descreva o conteúdo e objetivo deste simulado')
                             ->rows(3)
                             ->maxLength(1000),
                         
@@ -141,7 +143,7 @@ class SimuladoResource extends Resource
     {
         return [
             RelationManagers\QuestoesRelationManager::class,
-            RelationManagers\TentativasRelationManager::class,
+            RelationManagers\TentativasRelationManager::class, // Resultados dos Alunos
             RelationManagers\CategoriasRelationManager::class,
         ];
     }
@@ -152,7 +154,7 @@ class SimuladoResource extends Resource
             'index' => Pages\ListSimulados::route('/'),
             'create' => Pages\CreateSimulado::route('/create'),
             'edit' => Pages\EditSimulado::route('/{record}/edit'),
-            'adicionar-questoes-existentes' => Pages\AdicionarQuestoesExistentes::route('/{record}/adicionar-questoes-existentes'),
+            'adicionar-questoes-existentes' => Pages\AdicionarQuestoesExistentes::route('/{simulado}/adicionar-questoes-existentes'),
         ];
     }
 }
