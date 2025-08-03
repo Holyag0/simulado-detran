@@ -24,13 +24,15 @@ class Simulado extends Model
         'ativo' => 'boolean',
     ];
 
-    public function questoes(): HasMany
+    public function questoes(): BelongsToMany
     {
-        return $this->hasMany(Questao::class);
+        return $this->belongsToMany(Questao::class, 'questao_simulado')
+                    ->withTimestamps();
     }
 
     public function tentativas(): HasMany
     {
+        // Relacionamento com os resultados dos alunos neste simulado
         return $this->hasMany(Tentativa::class);
     }
 
@@ -41,9 +43,11 @@ class Simulado extends Model
                     ->withTimestamps();
     }
 
-    public function questoesAtivas(): HasMany
+    public function questoesAtivas(): BelongsToMany
     {
-        return $this->hasMany(Questao::class)->where('ativo', true);
+        return $this->belongsToMany(Questao::class, 'questao_simulado')
+                    ->where('ativo', true)
+                    ->withTimestamps();
     }
 
     public function gerarQuestoesAleatorias(): Collection

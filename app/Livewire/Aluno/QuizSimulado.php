@@ -31,19 +31,18 @@ class QuizSimulado extends Component
         $this->statusQuestoes = array_fill(0, count($this->questoes), 'nao_respondida');
         $this->tempoLimite = (int) ($simulado->tempo_limite * 60);
         
-        // Verificar se já existe uma tentativa em andamento
-        $tentativaExistente = Tentativa::where('user_id', Auth::id())
-            ->where('simulado_id', $simuladoId)
+        // Verificar se já existe um resultado em andamento
+        $resultadoExistente = Tentativa::where('user_id', Auth::id())
+            ->where('simulado_id', $this->simuladoId)
             ->where('status', 'em_andamento')
             ->first();
-        
-        if ($tentativaExistente) {
-            // Carregar tentativa existente
-            $this->tentativaId = $tentativaExistente->id;
-            $this->tempoInicio = $tentativaExistente->iniciado_em;
+
+        if ($resultadoExistente) {
+            // Carregar resultado existente
+            $this->tentativaId = $resultadoExistente->id;
+            $this->tempoInicio = $resultadoExistente->iniciado_em;
             
-            // Carregar respostas salvas
-            $respostasSalvas = Resposta::where('tentativa_id', $tentativaExistente->id)->get();
+            $respostasSalvas = Resposta::where('tentativa_id', $resultadoExistente->id)->get();
             foreach ($respostasSalvas as $resposta) {
                 $this->respostas[$resposta->questao_id] = $resposta->resposta_escolhida;
                 
@@ -60,11 +59,10 @@ class QuizSimulado extends Component
                 $this->indice = 0; // Se todas foram respondidas, voltar ao início
             }
         } else {
-            // Criar nova tentativa
-            $this->tempoInicio = now();
+            // Criar novo resultado
             $this->tentativaId = Tentativa::create([
                 'user_id' => Auth::id(),
-                'simulado_id' => $simuladoId,
+                'simulado_id' => $this->simuladoId,
                 'status' => 'em_andamento',
                 'iniciado_em' => now(),
             ])->id;

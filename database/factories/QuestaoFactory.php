@@ -24,7 +24,6 @@ class QuestaoFactory extends Factory
         ];
         $resposta = fake()->randomElement(['a', 'b', 'c', 'd']);
         return [
-            // 'simulado_id' será atribuído no seeder
             // 'categoria_id' será atribuído no seeder
             'pergunta' => fake()->sentence(8),
             'alternativa_a' => $alternativas['a'],

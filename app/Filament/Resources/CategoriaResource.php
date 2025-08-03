@@ -30,12 +30,14 @@ class CategoriaResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('nome')
                             ->label('Nome')
+                            ->placeholder('Ex: Legislação de Trânsito')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         
                         Forms\Components\Textarea::make('descricao')
                             ->label('Descrição')
+                            ->placeholder('Descreva brevemente o conteúdo desta categoria')
                             ->rows(3)
                             ->maxLength(500),
                         

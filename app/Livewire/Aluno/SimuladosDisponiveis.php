@@ -25,15 +25,15 @@ class SimuladosDisponiveis extends Component
             ->orderBy('titulo')
             ->get();
 
-        // Buscar todas as tentativas do usuário
-        $tentativasUsuario = Tentativa::where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
+        // Buscar todos os resultados do usuário
+        $resultadosUsuario = Tentativa::where('user_id', Auth::id())
+            ->where('status', 'finalizada')
             ->get();
 
-        // Organizar tentativas por simulado (pegando a mais recente de cada simulado)
-        $this->tentativas = $tentativasUsuario->groupBy('simulado_id')
-            ->map(function ($tentativasSimulado) {
-                return $tentativasSimulado->first(); // Pega a mais recente
+        // Organizar resultados por simulado (pegando a mais recente de cada simulado)
+        $this->tentativas = $resultadosUsuario->groupBy('simulado_id')
+            ->map(function ($resultadosSimulado) {
+                return $resultadosSimulado->first(); // Pega a mais recente
             });
     }
 

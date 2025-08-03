@@ -13,7 +13,18 @@ class EditSimulado extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->label('Excluir'),
         ];
+    }
+
+    protected function getSaveFormActionLabel(): string
+    {
+        return 'Salvar';
+    }
+
+    protected function getCancelFormActionLabel(): string
+    {
+        return 'Cancelar';
     }
 }

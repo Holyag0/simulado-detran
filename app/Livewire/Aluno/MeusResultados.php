@@ -29,13 +29,14 @@ class MeusResultados extends Component
 
     public function render()
     {
+        // Buscar resultados do usuário
         $query = Tentativa::where('user_id', Auth::id())
-            ->where('status', 'finalizada')
-            ->with(['simulado', 'respostas.questao.categoria']);
+            ->with(['simulado', 'user', 'respostas.questao.categoria']);
 
-        // Aplicar filtro por simulado se especificado
         if ($this->simuladoFiltro) {
-            $query->where('simulado_id', $this->simuladoFiltro);
+            $query->whereHas('simulado', function ($q) {
+                $q->where('id', $this->simuladoFiltro);
+            });
         }
 
         $tentativas = $query->orderBy('finalizado_em', 'desc')->get();
@@ -44,6 +45,7 @@ class MeusResultados extends Component
             'total_simulados' => $tentativas->count(),
             'aprovacoes' => $tentativas->where('pontuacao', '>=', 70)->count(),
             'media_geral' => $tentativas->count() > 0 ? round($tentativas->avg('pontuacao'), 1) : 0,
+            'melhor_pontuacao' => $tentativas->max('pontuacao') ?? 0,
         ];
 
         return view('livewire.aluno.meus-resultados', [

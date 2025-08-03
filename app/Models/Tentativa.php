@@ -86,11 +86,16 @@ class Tentativa extends Model
     {
         $respostas = $this->respostas()->with('questao.categoria')->get();
         
-        return $respostas->groupBy('questao.categoria.nome')->map(function ($respostasCategoria, $categoriaNome) {
+        return $respostas->groupBy(function ($resposta) {
+            return $resposta->questao->categoria ? $resposta->questao->categoria->nome : 'Sem Categoria';
+        })->map(function ($respostasCategoria, $categoriaNome) {
             $total = $respostasCategoria->count();
             $acertos = $respostasCategoria->where('correta', true)->count();
             $erros = $total - $acertos;
             $percentual = $total > 0 ? round(($acertos / $total) * 100, 1) : 0;
+            
+            $primeiraResposta = $respostasCategoria->first();
+            $cor = $primeiraResposta->questao->categoria ? $primeiraResposta->questao->categoria->cor : '#6B7280';
             
             return [
                 'categoria' => $categoriaNome,
@@ -98,7 +103,7 @@ class Tentativa extends Model
                 'acertos' => $acertos,
                 'erros' => $erros,
                 'percentual' => $percentual,
-                'cor' => $respostasCategoria->first()->questao->categoria->cor ?? '#3B82F6',
+                'cor' => $cor,
             ];
         });
     }

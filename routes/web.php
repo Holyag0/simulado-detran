@@ -43,7 +43,12 @@ Route::post('/logout', [LoginController::class, 'destroy'])
 Route::post('/admin/simulados/{simulado}/adicionar-questoes-existentes', [AdicionarQuestoesExistentes::class, 'associateQuestoes'])
     ->name('filament.admin.resources.simulados.adicionar-questoes-existentes');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::get('/admin/questoes/{questao}/dados', function ($questao) {
+    $questao = \App\Models\Questao::with('categoria')->findOrFail($questao);
+    return response()->json($questao);
+})->name('admin.questoes.dados');
+
+Route::middleware(['auth', 'verified', 'aluno.access'])->group(function () {
     Route::get('/aluno/simulados', SimuladosDisponiveis::class)->name('aluno.simulados');
     Route::get('/aluno/simulado/{simuladoId}/quiz', QuizSimulado::class)->name('aluno.simulado.quiz');
     Route::get('/aluno/simulado/{simuladoId}/resultado', VerResultadoSimulado::class)->name('aluno.simulado.resultado');

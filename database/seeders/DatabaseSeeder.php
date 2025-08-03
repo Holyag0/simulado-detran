@@ -30,22 +30,13 @@ class DatabaseSeeder extends Seeder
         // Cria 10 alunos
         User::factory(10)->create(['tipo' => 'aluno']);
 
-        // Criar categorias
-        $categorias = Categoria::factory(6)->create();
+        // Criar categorias usando CategoriaSeeder
+        $this->call(CategoriaSeeder::class);
 
-        // Criar questões com categorias
-        foreach ($categorias as $categoria) {
-            Questao::factory(20)->create([
-                'categoria_id' => $categoria->id,
-            ]);
-        }
+        // Criar questões usando QuestaoSeeder
+        $this->call(QuestaoSeeder::class);
 
-        // Cria 5 simulados, cada um com 15 questões
-        Simulado::factory(5)->create()->each(function ($simulado) {
-            Questao::factory(15)->create([
-                'simulado_id' => $simulado->id,
-                'categoria_id' => Categoria::inRandomOrder()->first()->id,
-            ]);
-        });
+        // Cria 5 simulados
+        Simulado::factory(5)->create();
     }
 }

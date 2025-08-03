@@ -9,4 +9,14 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateCategoria extends CreateRecord
 {
     protected static string $resource = CategoriaResource::class;
+
+    protected function getCreateFormActionLabel(): string
+    {
+        return 'Criar';
+    }
+
+    protected function getCreateAnotherFormActionLabel(): string
+    {
+        return 'Criar e criar outro';
+    }
 }
