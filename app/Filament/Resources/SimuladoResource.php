@@ -5,8 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SimuladoResource\Pages;
 use App\Filament\Resources\SimuladoResource\RelationManagers;
 use App\Models\Simulado;
+use App\Services\SimuladoService;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -73,46 +75,60 @@ class SimuladoResource extends Resource
                     ->label('Título')
                     ->searchable()
                     ->sortable(),
-                
+                Tables\Columns\TextColumn::make('descricao')
+                    ->label('Descrição')
+                    ->limit(50)
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('tempo_limite')
                     ->label('Tempo (min)')
                     ->sortable(),
-                
                 Tables\Columns\TextColumn::make('numero_questoes')
                     ->label('Questões')
                     ->sortable(),
-                
-                Tables\Columns\TextColumn::make('questoes_count')
-                    ->label('Questões Cadastradas')
-                    ->counts('questoes')
-                    ->sortable(),
-                
                 Tables\Columns\IconColumn::make('ativo')
                     ->label('Ativo')
-                    ->boolean()
-                    ->sortable(),
-                
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Criado em')
-                    ->dateTime('d/m/Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('questoes_count')
+                    ->label('Questões Configuradas')
+                    ->counts('questoes'),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('ativo')
-                    ->label('Status')
-                    ->placeholder('Todos')
-                    ->trueLabel('Ativos')
-                    ->falseLabel('Inativos'),
+                    ->label('Apenas Ativos'),
             ])
             ->actions([
+                Tables\Actions\Action::make('gerarQuestoes')
+                    ->label('Gerar Questões')
+                    ->icon('heroicon-o-arrow-path')
+                    ->color('success')
+                    ->action(function (Simulado $record) {
+                        $service = new SimuladoService();
+                        $validacao = $service->validarConfiguracao($record);
+                        
+                        if (!$validacao['valido']) {
+                            Notification::make()
+                                ->title('Erro na configuração')
+                                ->body(implode("\n", $validacao['erros']))
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+                        
+                        $service->gerarQuestoesParaSimulado($record);
+                        
+                        Notification::make()
+                            ->title('Questões geradas com sucesso')
+                            ->body("{$validacao['total_questoes']} questões foram adicionadas ao simulado")
+                            ->success()
+                            ->send();
+                    })
+                    ->requiresConfirmation()
+                    ->modalHeading('Gerar Questões Aleatórias')
+                    ->modalDescription('Isso irá substituir todas as questões atuais do simulado por questões aleatórias baseadas na configuração de categorias.')
+                    ->modalSubmitActionLabel('Gerar Questões')
+                    ->visible(fn($record) => $record->categorias()->count() > 0),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\Action::make('adicionarQuestoesExistentes')
-                    ->label('Adicionar Questões')
-                    ->icon('heroicon-o-plus')
-                    ->url(fn($record) => route('filament.admin.resources.simulados.adicionar-questoes-existentes', ['simulado' => $record->id]))
-                    ->color('primary'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -126,6 +142,7 @@ class SimuladoResource extends Resource
         return [
             RelationManagers\QuestoesRelationManager::class,
             RelationManagers\TentativasRelationManager::class,
+            RelationManagers\CategoriasRelationManager::class,
         ];
     }
 

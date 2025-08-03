@@ -1,4 +1,4 @@
- <?php
+<?php
 
 namespace Database\Factories;
 
@@ -35,6 +35,7 @@ class UserFactory extends Factory
             'auto_escola' => fake()->company(),
         ];
     }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

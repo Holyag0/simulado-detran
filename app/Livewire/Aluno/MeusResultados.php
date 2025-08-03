@@ -2,25 +2,29 @@
 
 namespace App\Livewire\Aluno;
 
-use Livewire\Component;
 use App\Models\Tentativa;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class MeusResultados extends Component
 {
-    public $tentativas;
-
-    public function mount()
-    {
-        $this->tentativas = Tentativa::with(['simulado', 'respostas.questao'])
-            ->where('user_id', Auth::id())
-            ->where('status', 'finalizada')
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
-
     public function render()
     {
-        return view('livewire.aluno.meus-resultados');
+        $tentativas = Tentativa::where('user_id', Auth::id())
+            ->where('status', 'finalizada')
+            ->with(['simulado', 'respostas.questao.categoria'])
+            ->orderBy('finalizado_em', 'desc')
+            ->get();
+
+        $estatisticasGerais = [
+            'total_simulados' => $tentativas->count(),
+            'aprovacoes' => $tentativas->where('pontuacao', '>=', 70)->count(),
+            'media_geral' => $tentativas->count() > 0 ? round($tentativas->avg('pontuacao'), 1) : 0,
+        ];
+
+        return view('livewire.aluno.meus-resultados', [
+            'tentativas' => $tentativas,
+            'estatisticasGerais' => $estatisticasGerais,
+        ]);
     }
 }

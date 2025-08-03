@@ -30,6 +30,12 @@ class QuestaoResource extends Resource
                     ->label('Simulado')
                     ->relationship('simulado', 'titulo')
                     ->required(),
+                Forms\Components\Select::make('categoria_id')
+                    ->label('Categoria')
+                    ->relationship('categoria', 'nome')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
                 Forms\Components\Textarea::make('pergunta')
                     ->label('Pergunta')
                     ->required()
@@ -132,13 +138,14 @@ class QuestaoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('simulado.titulo')
-                    ->label('Simulado')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('pergunta')
                     ->label('Pergunta')
                     ->limit(40)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('categoria.nome')
+                    ->label('Categoria')
+                    ->badge()
+                    ->color('primary')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('alternativa_a')->label('A'),
                 Tables\Columns\TextColumn::make('alternativa_b')->label('B'),
@@ -150,32 +157,23 @@ class QuestaoResource extends Resource
                 Tables\Columns\IconColumn::make('ativo')
                     ->label('Ativa')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Criada em')
-                    ->dateTime('d/m/Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('simulado_id')
-                    ->label('Simulado')
-                    ->relationship('simulado', 'titulo'),
+                Tables\Filters\SelectFilter::make('categoria_id')
+                    ->label('Categoria')
+                    ->relationship('categoria', 'nome')
+                    ->searchable()
+                    ->preload(),
                 Tables\Filters\TernaryFilter::make('ativo')
-                    ->label('Status')
-                    ->placeholder('Todas')
-                    ->trueLabel('Ativas')
-                    ->falseLabel('Inativas'),
+                    ->label('Apenas Ativas'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->label('Editar'),
-                Tables\Actions\DeleteAction::make()
-                    ->label('Excluir'),
+                Tables\Actions\EditAction::make()->label('Editar'),
+                Tables\Actions\DeleteAction::make()->label('Excluir'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->label('Excluir selecionados'),
+                    Tables\Actions\DeleteBulkAction::make()->label('Excluir selecionadas'),
                 ]),
             ]);
     }

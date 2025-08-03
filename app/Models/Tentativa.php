@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 class Tentativa extends Model
 {
@@ -58,5 +59,44 @@ class Tentativa extends Model
             'status' => 'finalizada',
             'finalizado_em' => now()
         ]);
+    }
+
+    public function getEstatisticasPorCategoria(): Collection
+    {
+        $respostas = $this->respostas()->with('questao.categoria')->get();
+        
+        return $respostas->groupBy('questao.categoria.nome')->map(function ($respostasCategoria, $categoriaNome) {
+            $total = $respostasCategoria->count();
+            $acertos = $respostasCategoria->where('correta', true)->count();
+            $erros = $total - $acertos;
+            $percentual = $total > 0 ? round(($acertos / $total) * 100, 1) : 0;
+            
+            return [
+                'categoria' => $categoriaNome,
+                'total' => $total,
+                'acertos' => $acertos,
+                'erros' => $erros,
+                'percentual' => $percentual,
+                'cor' => $respostasCategoria->first()->questao->categoria->cor ?? '#3B82F6',
+            ];
+        });
+    }
+
+    public function getTempoUtilizado(): int
+    {
+        if (!$this->iniciado_em || !$this->finalizado_em) {
+            return 0;
+        }
+        
+        return $this->iniciado_em->diffInSeconds($this->finalizado_em);
+    }
+
+    public function getTempoUtilizadoFormatado(): string
+    {
+        $segundos = $this->getTempoUtilizado();
+        $minutos = floor($segundos / 60);
+        $segundosRestantes = $segundos % 60;
+        
+        return sprintf('%d:%02d', $minutos, $segundosRestantes);
     }
 }

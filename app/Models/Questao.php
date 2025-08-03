@@ -13,6 +13,7 @@ class Questao extends Model
 
     protected $fillable = [
         'simulado_id',
+        'categoria_id',
         'pergunta',
         'alternativa_a',
         'alternativa_b',
@@ -32,6 +33,11 @@ class Questao extends Model
         return $this->belongsTo(Simulado::class);
     }
 
+    public function categoria(): BelongsTo
+    {
+        return $this->belongsTo(Categoria::class);
+    }
+
     public function respostas(): HasMany
     {
         return $this->hasMany(Resposta::class);
@@ -39,6 +45,6 @@ class Questao extends Model
 
     public function isCorrect($resposta): bool
     {
-        return strtolower($resposta) === strtolower($this->resposta_correta);
+        return $this->resposta_correta === $resposta;
     }
 }
