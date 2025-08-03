@@ -18,6 +18,9 @@ class TentativaResource extends Resource
     protected static ?string $model = Tentativa::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Tentativas';
+    protected static ?string $modelLabel = 'Tentativa';
+    protected static ?string $pluralModelLabel = 'Tentativas';
 
     public static function form(Form $form): Form
     {
@@ -37,11 +40,11 @@ class TentativaResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Editar'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Excluir selecionadas'),
                 ]),
             ]);
     }

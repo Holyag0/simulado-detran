@@ -19,20 +19,14 @@ class VerResultadoSimulado extends Component
     {
         $this->simuladoId = $simuladoId;
         $this->simulado = Simulado::findOrFail($simuladoId);
-        
-        // Buscar a tentativa finalizada do usuário para este simulado
         $this->tentativa = Tentativa::where('user_id', Auth::id())
             ->where('simulado_id', $simuladoId)
             ->where('status', 'finalizada')
             ->latest()
             ->firstOrFail();
-        
-        // Buscar todas as respostas da tentativa
         $respostas = Resposta::where('tentativa_id', $this->tentativa->id)
-            ->with('questao')
+            ->with('questao.categoria')
             ->get();
-        
-        // Organizar respostas detalhadas
         foreach ($respostas as $resposta) {
             $this->respostasDetalhadas[] = [
                 'questao' => $resposta->questao,
@@ -61,10 +55,14 @@ class VerResultadoSimulado extends Component
             'respostas_detalhadas' => $this->respostasDetalhadas,
         ];
 
+        // Estatísticas por categoria
+        $estatisticasCategoria = $this->tentativa->getEstatisticasPorCategoria();
+
         return view('livewire.aluno.ver-resultado-simulado', [
             'simulado' => $this->simulado,
             'tentativa' => $this->tentativa,
             'resultado' => $resultado,
+            'estatisticasCategoria' => $estatisticasCategoria,
         ]);
     }
 }
