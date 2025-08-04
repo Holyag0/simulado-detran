@@ -103,32 +103,9 @@ class SimuladoResource extends Resource
                     ->label('Gerar Questões')
                     ->icon('heroicon-o-arrow-path')
                     ->color('success')
-                    ->action(function (Simulado $record) {
-                        $service = new SimuladoService();
-                        $validacao = $service->validarConfiguracao($record);
-                        
-                        if (!$validacao['valido']) {
-                            Notification::make()
-                                ->title('Erro na configuração')
-                                ->body(implode("\n", $validacao['erros']))
-                                ->danger()
-                                ->send();
-                            return;
-                        }
-                        
-                        $service->gerarQuestoesParaSimulado($record);
-                        
-                        Notification::make()
-                            ->title('Questões geradas com sucesso')
-                            ->body("{$validacao['total_questoes']} questões foram adicionadas ao simulado")
-                            ->success()
-                            ->send();
-                    })
-                    ->requiresConfirmation()
-                    ->modalHeading('Gerar Questões Aleatórias')
-                    ->modalDescription('Isso irá substituir todas as questões atuais do simulado por questões aleatórias baseadas na configuração de categorias.')
-                    ->modalSubmitActionLabel('Gerar Questões')
-                    ->visible(fn($record) => $record->categorias()->count() > 0),
+                    ->disabled()
+                    ->tooltip('Funcionalidade em desenvolvimento - depende da configuração de categorias')
+                    ->visible(false), // Temporariamente oculto
                 Tables\Actions\EditAction::make()->label('Editar'),
                 Tables\Actions\DeleteAction::make()->label('Excluir'),
             ])

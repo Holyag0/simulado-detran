@@ -260,54 +260,76 @@
                                                 <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ $questao->pergunta }}</p>
                                             </div>
                                             
-                                            <div class="space-y-2 mb-4">
-                                                @foreach(['a', 'b', 'c', 'd'] as $alt)
-                                                    @php
-                                                        $isEscolhida = $respostaEscolhida === $alt;
-                                                        $isCorreta = $respostaCorreta === $alt;
-                                                        $baseClasses = 'flex items-center gap-3 p-3 rounded-lg border-2 ';
-                                                        
-                                                        if ($isCorreta) 
-                                                            $classes = $baseClasses . 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
-                                                        elseif ($isEscolhida && !$correta) 
-                                                            $classes = $baseClasses . 'border-red-500 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300';
-                                                        else 
-                                                            $classes = $baseClasses . 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400';
-                                                    @endphp
-                                                    <div class="{{ $classes }}">
-                                                        <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center font-bold text-sm {{ $isCorreta ? 'border-emerald-500 bg-emerald-500 text-white' : ($isEscolhida && !$correta ? 'border-red-500 bg-red-500 text-white' : 'border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400') }}">
-                                                            {{ strtoupper($alt) }}
-                                                        </div>
-                                                        <span class="flex-1">{{ $questao->{'alternativa_' . $alt} }}</span>
-                                                        <div class="flex items-center gap-2">
-                                                            @if($isCorreta)
-                                                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">
-                                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                                                    </svg>
-                                                                    Correta
-                                                                </span>
-                                                            @endif
-                                                            @if($isEscolhida && !$correta)
-                                                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300">
-                                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                                                    </svg>
-                                                                    Sua Resposta
-                                                                </span>
-                                                            @endif
-                                                            @if($isEscolhida && $correta)
-                                                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">
-                                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                                                    </svg>
-                                                                    Sua Resposta
-                                                                </span>
-                                                            @endif
-                                                        </div>
+                                            @if($respostaEscolhida === 'pulado')
+                                                <div class="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 border border-amber-200 dark:border-amber-800 mb-4">
+                                                    <div class="flex items-center gap-2 text-amber-700 dark:text-amber-300">
+                                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        <span class="font-semibold">Questão pulada</span>
                                                     </div>
-                                                @endforeach
-                                            </div>
+                                                    <p class="text-amber-600 dark:text-amber-400 text-sm mt-1">Esta questão foi pulada durante o simulado.</p>
+                                                </div>
+                                            @elseif($respostaEscolhida === 'nao_respondida')
+                                                <div class="bg-gray-50 dark:bg-gray-900/20 rounded-lg p-4 border border-gray-200 dark:border-gray-800 mb-4">
+                                                    <div class="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        <span class="font-semibold">Questão não respondida</span>
+                                                    </div>
+                                                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Esta questão não foi respondida durante o simulado.</p>
+                                                </div>
+                                            @else
+                                                <div class="space-y-2 mb-4">
+                                                    @foreach(['a', 'b', 'c', 'd'] as $alt)
+                                                        @php
+                                                            $isEscolhida = $respostaEscolhida === $alt;
+                                                            $isCorreta = $respostaCorreta === $alt;
+                                                            $baseClasses = 'flex items-center gap-3 p-3 rounded-lg border-2 ';
+                                                            
+                                                            if ($isCorreta) 
+                                                                $classes = $baseClasses . 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
+                                                            elseif ($isEscolhida && !$correta) 
+                                                                $classes = $baseClasses . 'border-red-500 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300';
+                                                            else 
+                                                                $classes = $baseClasses . 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400';
+                                                        @endphp
+                                                        <div class="{{ $classes }}">
+                                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center font-bold text-sm {{ $isCorreta ? 'border-emerald-500 bg-emerald-500 text-white' : ($isEscolhida && !$correta ? 'border-red-500 bg-red-500 text-white' : 'border-gray-300 dark:border-gray-500 text-gray-500 dark:text-gray-400') }}">
+                                                                {{ strtoupper($alt) }}
+                                                            </div>
+                                                            <span class="flex-1">{{ $questao->{'alternativa_' . $alt} }}</span>
+                                                            <div class="flex items-center gap-2">
+                                                                @if($isCorreta)
+                                                                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">
+                                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                                        </svg>
+                                                                        Correta
+                                                                    </span>
+                                                                @endif
+                                                                @if($isEscolhida && !$correta)
+                                                                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300">
+                                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                                                        </svg>
+                                                                        Sua Resposta
+                                                                    </span>
+                                                                @endif
+                                                                @if($isEscolhida && $correta)
+                                                                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">
+                                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                                        </svg>
+                                                                        Sua Resposta
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
                                             
                                             @if($questao->explicacao)
                                                 <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
