@@ -49,7 +49,13 @@ class QuizSimulado extends Component
                 // Atualizar status das questões
                 $indiceQuestao = array_search($resposta->questao_id, array_column($this->questoes, 'id'));
                 if ($indiceQuestao !== false) {
-                    $this->statusQuestoes[$indiceQuestao] = 'respondida';
+                    if ($resposta->resposta_escolhida === 'pulado') {
+                        $this->statusQuestoes[$indiceQuestao] = 'pulado';
+                    } elseif ($resposta->resposta_escolhida === 'nao_respondida') {
+                        $this->statusQuestoes[$indiceQuestao] = 'nao_respondida';
+                    } else {
+                        $this->statusQuestoes[$indiceQuestao] = 'respondida';
+                    }
                 }
             }
             
@@ -147,7 +153,7 @@ class QuizSimulado extends Component
             Resposta::create([
                 'tentativa_id' => $this->tentativaId,
                 'questao_id' => $questao['id'],
-                'resposta_escolhida' => null, // Não respondeu
+                'resposta_escolhida' => 'pulado', // Questão pulada
                 'correta' => false,
             ]);
         }
@@ -166,20 +172,45 @@ class QuizSimulado extends Component
         
         // Buscar todas as respostas já salvas
         $respostasSalvas = Resposta::where('tentativa_id', $tentativa->id)->get();
+        $respostasSalvasIds = $respostasSalvas->pluck('questao_id')->toArray();
         
-        foreach ($respostasSalvas as $resposta) {
-            $questao = Questao::find($resposta->questao_id);
-            $correta = $resposta->correta;
-            if ($correta) $acertos++;
+        // Processar todas as questões do simulado
+        foreach ($this->questoes as $questao) {
+            $respostaSalva = $respostasSalvas->where('questao_id', $questao['id'])->first();
             
-            // Guardar detalhes para revisão
-            $respostasDetalhadas[] = [
-                'questao' => $questao,
-                'resposta_escolhida' => $resposta->resposta_escolhida,
-                'correta' => $correta,
-                'resposta_correta' => $questao->resposta_correta,
-                'explicacao' => $questao->explicacao,
-            ];
+            if ($respostaSalva) {
+                // Questão já foi respondida ou pulada
+                $questaoModel = Questao::find($questao['id']);
+                $correta = $respostaSalva->correta;
+                if ($correta) $acertos++;
+                
+                // Guardar detalhes para revisão
+                $respostasDetalhadas[] = [
+                    'questao' => $questaoModel,
+                    'resposta_escolhida' => $respostaSalva->resposta_escolhida,
+                    'correta' => $correta,
+                    'resposta_correta' => $questaoModel->resposta_correta,
+                    'explicacao' => $questaoModel->explicacao,
+                ];
+            } else {
+                // Questão não foi respondida - criar registro
+                $questaoModel = Questao::find($questao['id']);
+                Resposta::create([
+                    'tentativa_id' => $this->tentativaId,
+                    'questao_id' => $questao['id'],
+                    'resposta_escolhida' => 'nao_respondida',
+                    'correta' => false,
+                ]);
+                
+                // Guardar detalhes para revisão
+                $respostasDetalhadas[] = [
+                    'questao' => $questaoModel,
+                    'resposta_escolhida' => 'nao_respondida',
+                    'correta' => false,
+                    'resposta_correta' => $questaoModel->resposta_correta,
+                    'explicacao' => $questaoModel->explicacao,
+                ];
+            }
         }
         
         $percentual = $total > 0 ? round(($acertos / $total) * 100, 2) : 0;
