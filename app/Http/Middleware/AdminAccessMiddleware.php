@@ -23,10 +23,11 @@ class AdminAccessMiddleware
 
         // Verificar se o usuário é admin
         if (Auth::user()->tipo !== 'admin') {
-            // Redirecionar para a página inicial com mensagem de erro
+            // Se não for admin, redirecionar para a página inicial com mensagem de erro
             return redirect('/')->with('error', 'Acesso negado. Apenas administradores podem acessar o painel administrativo.');
         }
 
+        // Se for admin, permitir acesso
         return $next($request);
     }
 } 
