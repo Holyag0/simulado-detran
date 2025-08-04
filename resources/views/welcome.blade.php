@@ -97,12 +97,66 @@
                                class="block w-full text-center py-3 px-4 border border-gray-300 dark:border-[#3E3E3A] hover:bg-gray-50 dark:hover:bg-[#1a1a19] text-[#1b1b18] dark:text-[#EDEDEC] font-medium rounded-md transition-colors">
                                 Já tenho conta
                             </a>
+                            
+                            {{-- Separador visual --}}
+                            <div class="relative">
+                                <div class="absolute inset-0 flex items-center">
+                                    <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                                </div>
+                                <div class="relative flex justify-center text-sm">
+                                    <span class="px-2 bg-white dark:bg-[#161615] text-gray-500 dark:text-gray-400">Administradores</span>
+                                </div>
+                            </div>
+                            
+                            {{-- Botão para acesso ao painel admin --}}
+                            <a href="{{ url('/admin/login') }}" 
+                               class="block w-full text-center py-2 px-4 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-white font-medium rounded-md transition-all duration-200 text-sm">
+                                <div class="flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Acesso Administrativo
+                                </div>
+                            </a>
                         </div>
                     @else
-                        <div class="mb-6">
+                        <div class="mb-6 space-y-3">
+                            @if(Auth::user()->isAdmin())
+                                {{-- Botão especial para Admin --}}
+                                <a href="{{ url('/admin') }}" 
+                                   class="block w-full text-center py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-md transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Painel Administrativo
+                                    </div>
+                                </a>
+                                
+                                {{-- Separador visual --}}
+                                <div class="relative">
+                                    <div class="absolute inset-0 flex items-center">
+                                        <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                                    </div>
+                                    <div class="relative flex justify-center text-sm">
+                                        <span class="px-2 bg-white dark:bg-[#161615] text-gray-500 dark:text-gray-400">ou</span>
+                                    </div>
+                                </div>
+                            @endif
+                            
+                            {{-- Botão para Simulados (todos os usuários) --}}
                             <a href="{{ route('aluno.simulados') }}" 
                                class="block w-full text-center py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition-colors">
-                                Acessar Simulados Disponíveis
+                                @if(Auth::user()->isAdmin())
+                                    <div class="flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Testar Simulados (Modo Aluno)
+                                    </div>
+                                @else
+                                    Acessar Simulados Disponíveis
+                                @endif
                             </a>
                         </div>
                     @endguest
