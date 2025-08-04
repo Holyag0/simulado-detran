@@ -9,18 +9,27 @@
                         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ $simulado->titulo }}</h1>
                         <p class="text-gray-600 dark:text-gray-400 mt-1">{{ $simulado->descricao }}</p>
                         <p class="text-sm text-gray-500 dark:text-gray-500 mt-2">
-                            Finalizado em {{ $tentativa->finalizado_em->format('d/m/Y H:i') }}
+                            @if($tentativa->finalizado_em)
+                                Finalizado em {{ $tentativa->finalizado_em->format('d/m/Y H:i') }}
+                            @else
+                                <span class="text-yellow-600 dark:text-yellow-400">Em andamento</span>
+                            @endif
                         </p>
                     </div>
                     <div class="text-right">
                         <div class="text-sm text-gray-600 dark:text-gray-400">Tempo Utilizado</div>
                         <div class="text-lg font-bold text-gray-800 dark:text-gray-100">
                             @php
-                                $totalSegundos = $tentativa->iniciado_em->diffInSeconds($tentativa->finalizado_em);
-                                $minutos = floor($totalSegundos / 60);
-                                $segundos = $totalSegundos % 60;
+                                if ($tentativa->iniciado_em && $tentativa->finalizado_em) {
+                                    $totalSegundos = $tentativa->iniciado_em->diffInSeconds($tentativa->finalizado_em);
+                                    $minutos = floor($totalSegundos / 60);
+                                    $segundos = $totalSegundos % 60;
+                                    $tempoFormatado = $minutos . ':' . str_pad($segundos, 2, '0', STR_PAD_LEFT);
+                                } else {
+                                    $tempoFormatado = '--:--';
+                                }
                             @endphp
-                            {{ $minutos }}:{{ str_pad($segundos, 2, '0', STR_PAD_LEFT) }}
+                            {{ $tempoFormatado }}
                         </div>
                     </div>
                 </div>
