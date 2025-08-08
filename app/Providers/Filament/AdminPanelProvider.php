@@ -18,6 +18,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\AdminAccessMiddleware;
+use App\Filament\Widgets\AvisosStatsWidget;
+use App\Filament\Widgets\NotificacoesWidget;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -41,6 +43,8 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+                AvisosStatsWidget::class,
+                NotificacoesWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

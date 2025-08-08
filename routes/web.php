@@ -7,9 +7,11 @@ use App\Livewire\Aluno\QuizSimulado;
 use App\Livewire\Aluno\MeusResultados;
 use App\Livewire\Aluno\MinhaConta;
 use App\Livewire\Aluno\VerResultadoSimulado;
+use App\Livewire\AvisosAluno;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\AvisoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,13 +42,22 @@ Route::post('/logout', [LoginController::class, 'destroy'])
     ->name('logout')
     ->middleware('auth');
 
-Route::post('/admin/simulados/{simulado}/adicionar-questoes-existentes', [AdicionarQuestoesExistentes::class, 'associateQuestoes'])
-    ->name('filament.admin.resources.simulados.adicionar-questoes-existentes');
+// Rota movida para o Filament - não duplicar aqui
+// Route::post('/admin/simulados/{simulado}/adicionar-questoes-existentes', [AdicionarQuestoesExistentes::class, 'associateQuestoes'])
+//     ->name('filament.admin.resources.simulados.adicionar-questoes-existentes');
 
 Route::get('/admin/questoes/{questao}/dados', function ($questao) {
     $questao = \App\Models\Questao::with('categoria')->findOrFail($questao);
     return response()->json($questao);
 })->name('admin.questoes.dados');
+
+// Rotas para o sistema de avisos
+Route::middleware(['auth'])->group(function () {
+    Route::get('/avisos', [AvisoController::class, 'index'])->name('avisos.index');
+    Route::get('/avisos/popups', [AvisoController::class, 'popups'])->name('avisos.popups');
+    Route::post('/avisos/{id}/marcar-lido', [AvisoController::class, 'marcarComoLido'])->name('avisos.marcar-lido');
+    Route::get('/avisos/stats', [AvisoController::class, 'stats'])->name('avisos.stats')->middleware('admin.access');
+});
 
 Route::middleware(['auth', 'verified', 'aluno.access'])->group(function () {
     Route::get('/aluno/simulados', SimuladosDisponiveis::class)->name('aluno.simulados');
@@ -54,4 +65,5 @@ Route::middleware(['auth', 'verified', 'aluno.access'])->group(function () {
     Route::get('/aluno/simulado/{simuladoId}/resultado', VerResultadoSimulado::class)->name('aluno.simulado.resultado');
     Route::get('/aluno/resultados', MeusResultados::class)->name('aluno.resultados');
     Route::get('/aluno/conta', MinhaConta::class)->name('aluno.conta');
+    Route::get('/aluno/avisos', AvisosAluno::class)->name('aluno.avisos');
 });

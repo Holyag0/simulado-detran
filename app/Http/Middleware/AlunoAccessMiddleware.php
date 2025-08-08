@@ -21,15 +21,13 @@ class AlunoAccessMiddleware
             return redirect()->route('login');
         }
 
-        // Verificar se o usuário é aluno
-        if (Auth::user()->tipo !== 'aluno') {
-            // Redirecionar para o painel admin se for admin, ou para home se for outro tipo
-            if (Auth::user()->tipo === 'admin') {
-                return redirect('/admin')->with('error', 'Esta área é destinada apenas para alunos.');
-            }
-            return redirect('/')->with('error', 'Acesso negado. Esta área é destinada apenas para alunos.');
+        // Permitir acesso para alunos e admins
+        // Admins podem acessar a área de alunos para fins de teste e supervisão
+        if (Auth::user()->tipo === 'aluno' || Auth::user()->tipo === 'admin') {
+            return $next($request);
         }
 
-        return $next($request);
+        // Bloquear outros tipos de usuário (se houver)
+        return redirect('/')->with('error', 'Acesso negado.');
     }
 } 

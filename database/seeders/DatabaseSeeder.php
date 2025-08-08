@@ -36,6 +36,12 @@ class DatabaseSeeder extends Seeder
         // Criar questões usando QuestaoSeeder
         $this->call(QuestaoSeeder::class);
 
+        // Criar avisos usando AvisoSeeder
+        $this->call(AvisoSeeder::class);
+
+        // Criar banners usando BannerSeeder
+        $this->call(BannerSeeder::class);
+
         // Cria 5 simulados
         Simulado::factory(5)->create();
     }
