@@ -38,7 +38,12 @@
                 </div>
 
                 <!-- User Menu -->
-                <div class="flex items-center">
+                <div class="flex items-center space-x-4">
+                    <!-- Sino de Notificações -->
+                    @if(Auth::check())
+                        @livewire('notificacoes-sino')
+                    @endif
+
                     <!-- User Info -->
                     <div class="hidden md:flex items-center space-x-4">
                         <span class="text-sm text-gray-700 dark:text-gray-300">
@@ -100,10 +105,20 @@
         </div>
     </nav>
 
+    <!-- Banner Carrossel (para alunos e admins na área de alunos) -->
+    @if(Auth::check() && (Auth::user()->isAluno() || Auth::user()->isAdmin()))
+        @livewire('banner-carrossel')
+    @endif
+
     <!-- Main Content -->
     <main class="flex-1">
         {{ $slot }}
     </main>
+
+    <!-- Avisos Pop-up -->
+    @if(Auth::check())
+        @livewire('avisos-popup')
+    @endif
 
     <!-- Mobile Menu JavaScript -->
     <script>
