@@ -12,6 +12,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+
 class QuestoesRelationManager extends RelationManager
 {
     protected static string $relationship = 'questoes';
@@ -143,7 +144,7 @@ class QuestoesRelationManager extends RelationManager
                     ->label('Adicionar Questões Existentes')
                     ->icon('heroicon-o-plus-circle')
                     ->color('success')
-                    ->url(fn () => route('filament.admin.resources.simulados.adicionar-questoes-existentes', ['simulado' => $this->getOwnerRecord()]))
+                    ->url(fn () => route('filament.admin.resources.simulados.adicionar-questoes-modal', ['record' => $this->getOwnerRecord()]))
                     ->openUrlInNewTab(false),
             ])
             ->actions([

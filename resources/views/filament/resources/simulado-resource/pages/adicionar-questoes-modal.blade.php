@@ -68,13 +68,6 @@
                         </tbody>
                     </table>
                 </div>
-                @if($questoes->hasPages())
-                <div class="mt-4 flex justify-center">
-                    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                        {{ $questoes->appends(request()->query())->links() }}
-                    </div>
-                </div>
-                @endif
             </div>
 
             <!-- Coluna Direita: Questões Selecionadas -->
@@ -91,7 +84,7 @@
                         </li>
                     </template>
                 </ul>
-                <form method="POST" :action="'{{ route('filament.admin.resources.simulados.adicionar-questoes-existentes', $simulado ?? 1) }}'" x-show="selectedQuestoes.length > 0">
+                <form method="POST" action="{{ route('filament.admin.resources.simulados.adicionar-questoes-modal.associate-questoes', $simulado ?? 1) }}" x-show="selectedQuestoes.length > 0">
                     @csrf
                     <template x-for="questao in selectedQuestoes" :key="questao.id">
                         <input type="hidden" name="questoes[]" :value="questao.id">
@@ -280,6 +273,7 @@
                 }
             }
         }
+        
         function previewQuestion(id) {
             // Mostrar modal e loading
             const modal = document.getElementById('questaoModal');
@@ -507,4 +501,4 @@
             animation: pulse-green 2s infinite;
         }
     </style>
-</x-filament-panels::page>
+</x-filament-panels::page> 

@@ -131,7 +131,7 @@ class SimuladoResource extends Resource
             'index' => Pages\ListSimulados::route('/'),
             'create' => Pages\CreateSimulado::route('/create'),
             'edit' => Pages\EditSimulado::route('/{record}/edit'),
-            'adicionar-questoes-existentes' => Pages\AdicionarQuestoesExistentes::route('/{simulado}/adicionar-questoes-existentes'),
+            'adicionar-questoes-modal' => Pages\AdicionarQuestoesModal::route('/{record}/adicionar-questoes-modal'),
         ];
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Filament\Resources\SimuladoResource\Pages\AdicionarQuestoesExistentes;
+
 use App\Livewire\Aluno\SimuladosDisponiveis;
 use App\Livewire\Aluno\QuizSimulado;
 use App\Livewire\Aluno\MeusResultados;
@@ -42,14 +42,15 @@ Route::post('/logout', [LoginController::class, 'destroy'])
     ->name('logout')
     ->middleware('auth');
 
-// Rota movida para o Filament - não duplicar aqui
-// Route::post('/admin/simulados/{simulado}/adicionar-questoes-existentes', [AdicionarQuestoesExistentes::class, 'associateQuestoes'])
-//     ->name('filament.admin.resources.simulados.adicionar-questoes-existentes');
+
 
 Route::get('/admin/questoes/{questao}/dados', function ($questao) {
     $questao = \App\Models\Questao::with('categoria')->findOrFail($questao);
     return response()->json($questao);
 })->name('admin.questoes.dados');
+
+Route::post('/admin/simulados/{record}/adicionar-questoes-modal/associate-questoes', [\App\Filament\Resources\SimuladoResource\Pages\AdicionarQuestoesModal::class, 'associateQuestoes'])
+    ->name('filament.admin.resources.simulados.adicionar-questoes-modal.associate-questoes');
 
 // Rotas para o sistema de avisos
 Route::middleware(['auth'])->group(function () {
