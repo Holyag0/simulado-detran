@@ -7,6 +7,7 @@ use App\Models\Simulado;
 use App\Models\Questao;
 use App\Models\Categoria;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,16 +16,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Cria 2 admins fixos
-        User::factory()->create([
+        // Cria 2 admins fixos sem usar faker
+        User::create([
             'name' => 'Admin',
             'email' => 'admin@admin.com',
+            'password' => Hash::make('password'),
             'tipo' => 'admin',
+            'email_verified_at' => now(),
         ]);
-        User::factory()->create([
+        User::create([
             'name' => 'Admin 2',
             'email' => 'admin2@admin.com',
+            'password' => Hash::make('password'),
             'tipo' => 'admin',
+            'email_verified_at' => now(),
         ]);
 
         // Cria 10 alunos
