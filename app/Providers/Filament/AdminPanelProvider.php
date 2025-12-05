@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->authGuard('web')
             ->brandName('Simulado DETRAN')
             ->colors([
                 'primary' => Color::Amber,
