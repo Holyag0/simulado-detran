@@ -3,9 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Simulado;
-use App\Models\Questao;
-use App\Models\Categoria;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -33,21 +30,21 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Cria 10 alunos
-        User::factory(10)->create(['tipo' => 'aluno']);
+        // User::factory(10)->create(['tipo' => 'aluno']);
 
-        // Criar categorias usando CategoriaSeeder
-        $this->call(CategoriaSeeder::class);
+        // // Criar categorias usando CategoriaSeeder
+        // $this->call(CategoriaSeeder::class);
 
-        // Criar questões usando QuestaoSeeder
-        $this->call(QuestaoSeeder::class);
+        // // Criar questões usando QuestaoSeeder
+        // $this->call(QuestaoSeeder::class);
 
-        // Criar avisos usando AvisoSeeder
-        $this->call(AvisoSeeder::class);
+        // // Criar avisos usando AvisoSeeder
+        // $this->call(AvisoSeeder::class);
 
-        // Criar banners usando BannerSeeder
-        $this->call(BannerSeeder::class);
+        // // Criar banners usando BannerSeeder
+        // $this->call(BannerSeeder::class);
 
-        // Cria 5 simulados
-        Simulado::factory(5)->create();
+        // // Cria 5 simulados
+        // Simulado::factory(5)->create();
     }
 }
