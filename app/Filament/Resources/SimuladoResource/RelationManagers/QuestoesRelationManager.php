@@ -17,6 +17,31 @@ class QuestoesRelationManager extends RelationManager
 {
     protected static string $relationship = 'questoes';
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        // Garantir que os checkboxes sejam marcados corretamente ao editar
+        $respostaCorreta = $data['resposta_correta'] ?? 'a';
+        
+        $data['resposta_correta_a'] = $respostaCorreta === 'a';
+        $data['resposta_correta_b'] = $respostaCorreta === 'b';
+        $data['resposta_correta_c'] = $respostaCorreta === 'c';
+        $data['resposta_correta_d'] = $respostaCorreta === 'd';
+        
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        // Remover campos virtuais dos checkboxes antes de salvar
+        // Apenas o campo 'resposta_correta' deve ser salvo no banco
+        unset($data['resposta_correta_a']);
+        unset($data['resposta_correta_b']);
+        unset($data['resposta_correta_c']);
+        unset($data['resposta_correta_d']);
+        
+        return $data;
+    }
+
     public function form(Form $form): Form
     {
         return $form

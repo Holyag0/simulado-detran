@@ -62,23 +62,33 @@ class VerResultadoSimulado extends Component
             $percentual = $total > 0 ? round(($acertos / $total) * 100, 2) : 0;
             $nota = $total > 0 ? round(($acertos / $total) * 10, 1) : 0;
 
+            $aprovado = $this->simulado->isAprovado($nota);
+            
             $resultado = [
                 'acertos' => $acertos,
                 'total' => $total,
                 'erros' => $erros,
                 'percentual' => $percentual,
                 'nota' => $nota,
+                'aprovado' => $aprovado,
+                'nota_minima' => (float) $this->simulado->nota_minima_aprovacao,
                 'respostas_detalhadas' => $this->respostasDetalhadas,
             ];
 
             // Estatísticas por categoria
             $estatisticasCategoria = $this->tentativa->getEstatisticasPorCategoria();
+            
+            // Calcular média do simulado
+            $mediaSimulado = $this->simulado->getMediaNotas();
+            $totalTentativas = $this->simulado->getTotalTentativas();
 
             return view('livewire.aluno.ver-resultado-simulado', [
                 'simulado' => $this->simulado,
                 'tentativa' => $this->tentativa,
                 'resultado' => $resultado,
                 'estatisticasCategoria' => $estatisticasCategoria,
+                'mediaSimulado' => $mediaSimulado,
+                'totalTentativas' => $totalTentativas,
             ]);
         } catch (\Exception $e) {
             Log::error('Erro ao renderizar resultado do simulado: ' . $e->getMessage());
