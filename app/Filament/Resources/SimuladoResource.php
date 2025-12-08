@@ -130,7 +130,11 @@ class SimuladoResource extends Resource
                     ->counts('questoes'),
                 Tables\Columns\TextColumn::make('nota_minima_aprovacao')
                     ->label('Nota Mínima')
-                    ->formatStateUsing(fn ($state) => number_format($state, 1, ',', '.') . '/10')
+                    ->formatStateUsing(function ($state) {
+                        // Proteção contra NULL: usar a mesma lógica de isAprovado() para consistência
+                        $notaMinima = $state !== null ? (float) $state : 7.0;
+                        return number_format($notaMinima, 1, ',', '.') . '/10';
+                    })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('media_notas')
                     ->label('Média Geral')

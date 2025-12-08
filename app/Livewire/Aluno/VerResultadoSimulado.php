@@ -64,6 +64,12 @@ class VerResultadoSimulado extends Component
 
             $aprovado = $this->simulado->isAprovado($nota);
             
+            // Garantir consistência: usar a mesma lógica de null-check do isAprovado()
+            // Se nota_minima_aprovacao for null, usar 7.0 como padrão (mesmo padrão usado em isAprovado())
+            $notaMinima = $this->simulado->nota_minima_aprovacao !== null 
+                ? (float) $this->simulado->nota_minima_aprovacao 
+                : 7.0;
+            
             $resultado = [
                 'acertos' => $acertos,
                 'total' => $total,
@@ -71,7 +77,7 @@ class VerResultadoSimulado extends Component
                 'percentual' => $percentual,
                 'nota' => $nota,
                 'aprovado' => $aprovado,
-                'nota_minima' => (float) $this->simulado->nota_minima_aprovacao,
+                'nota_minima' => $notaMinima,
                 'respostas_detalhadas' => $this->respostasDetalhadas,
             ];
 

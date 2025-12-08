@@ -117,6 +117,8 @@ class Simulado extends Model
      */
     public function getNotaMinimaFormatada(): string
     {
-        return number_format((float) $this->nota_minima_aprovacao, 1, ',', '.');
+        // Proteção contra NULL: usar a mesma lógica de isAprovado() para consistência
+        $notaMinima = $this->nota_minima_aprovacao !== null ? (float) $this->nota_minima_aprovacao : 7.0;
+        return number_format($notaMinima, 1, ',', '.');
     }
 }
