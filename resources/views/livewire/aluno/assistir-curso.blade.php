@@ -38,8 +38,8 @@
                             <span>Progresso do Curso</span>
                             <span class="font-semibold">{{ $progresso['percentual'] }}%</span>
                         </div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-primary-600 h-2 rounded-full transition-all duration-300" 
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                            <div class="bg-emerald-500 h-2 rounded-full transition-all duration-300" 
                                  style="width: {{ $progresso['percentual'] }}%">
                             </div>
                         </div>

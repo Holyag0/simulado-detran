@@ -56,6 +56,9 @@ class CursosDisponiveis extends Component
                 ];
                 return $curso;
             });
+
+            // Admin não precisa de "Outros cursos" separado
+            $cursosOutros = collect();
         } else {
             $meusCursos = Auth::user()->cursos()
                 ->with(['modulos' => function ($query) {
@@ -67,13 +70,16 @@ class CursosDisponiveis extends Component
                     $curso->progresso = $progresso;
                     return $curso;
                 });
+
+            // Remover da lista geral os cursos em que o aluno já está inscrito
+            $cursosOutros = $cursos->reject(function ($curso) {
+                return in_array($curso->id, $this->cursosInscritos);
+            });
         }
 
         return view('livewire.aluno.cursos-disponiveis', [
-            'cursos' => $cursos,
+            'cursosOutros' => $cursosOutros,
             'meusCursos' => $meusCursos,
         ]);
     }
 }
-
-

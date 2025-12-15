@@ -87,8 +87,8 @@
 
                                     {{-- Barra de Progresso --}}
                                     <div class="mb-4">
-                                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                            <div class="bg-primary-600 h-2 rounded-full transition-all duration-300" 
+                                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                                            <div class="bg-emerald-500 h-2 rounded-full transition-all duration-300" 
                                                  style="width: {{ $curso->progresso['percentual'] }}%">
                                             </div>
                                         </div>
@@ -115,9 +115,9 @@
                     {{ $meusCursos->count() > 0 ? 'Outros Cursos' : 'Cursos Disponíveis' }}
                 </h2>
                 
-                @if($cursos->count() > 0)
+                @if($cursosOutros->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach($cursos as $curso)
+                        @foreach($cursosOutros as $curso)
                             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
                                 {{-- Imagem do Curso --}}
                                 <div class="h-48 bg-gradient-to-br from-primary-500 to-primary-700 relative overflow-hidden">
@@ -169,11 +169,6 @@
                                            class="block w-full bg-primary-600 hover:bg-primary-700 text-white text-center px-4 py-2 rounded-lg font-medium transition-colors">
                                             Visualizar Curso
                                         </a>
-                                    @elseif(in_array($curso->id, $cursosInscritos))
-                                        <button disabled
-                                                class="w-full bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-center px-4 py-2 rounded-lg font-medium cursor-not-allowed">
-                                            Já Inscrito
-                                        </button>
                                     @else
                                         <button wire:click="inscrever({{ $curso->id }})"
                                                 class="w-full bg-primary-600 hover:bg-primary-700 text-white text-center px-4 py-2 rounded-lg font-medium transition-colors">
@@ -189,7 +184,7 @@
                         <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                         </svg>
-                        <p class="text-gray-600 dark:text-gray-400 text-lg">Nenhum curso disponível no momento.</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-lg">Outros cursos estarão disponíveis em breve.</p>
                     </div>
                 @endif
             </div>
